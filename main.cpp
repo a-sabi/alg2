@@ -10,17 +10,20 @@ int main() {
     std::getline(std::cin, expression);
 
     InfixCalculator calculator;
-    std::string postfix = calculator.infixToPostfix(expression);
 
+    if (!calculator.isValidExpression(expression)) {
+        std::cout << "Error: Invalid expression." << std::endl;
+        return 0;
+    }
+
+    std::string postfix = calculator.infixToPostfix(expression);
     std::cout << "Postfix expression: " << postfix << std::endl;
 
-    int result = calculator.calculatePostfix(postfix);
-
-    if (calculator.isValidExpression(expression)) {
-        std::cout << "Result: " << result << std::endl;
-    } else {
-        std::cout << "Error: Invalid expression." << std::endl;
+    if (postfix.back() == ' ') {
+        postfix.pop_back();
     }
+    int result = calculator.calculatePostfix(postfix);
+    std::cout << "Result: " << result << std::endl;
 
     return 0;
 }

@@ -31,7 +31,7 @@ std::string InfixCalculator::infixToPostfix(const std::string& expression) {
         } else if (c == ' ') {
             if (operand != 0) {
                 postfix += std::to_string(operand) + ' '; // Добавляем многозначное число в постфиксную строку
-                operand = 0;
+                operand = 0; // Сбрасываем временную переменную обратно в ноль
             }
         } else if (c == '(') {
             stack.push('(');
@@ -42,7 +42,7 @@ std::string InfixCalculator::infixToPostfix(const std::string& expression) {
             if (!stack.isEmpty() && stack.top() == '(')
                 stack.pop();
         } else if (isOperator(c)) {
-            while (!stack.isEmpty() && getPrecedence(c) <= getPrecedence(stack.top())) {
+            while (!stack.isEmpty() && getPrecedence(c) <= getPrecedence(char(stack.top())) && stack.top() != '(') {
                 queue.enqueue(stack.pop());
             }
             stack.push(c);
@@ -58,7 +58,7 @@ std::string InfixCalculator::infixToPostfix(const std::string& expression) {
     }
 
     while (!queue.isEmpty()) {
-        postfix += queue.dequeue();
+        postfix += char(queue.dequeue());
         postfix += ' ';
     }
 
@@ -75,8 +75,10 @@ int InfixCalculator::calculatePostfix(const string& postfix) {
         if (isdigit(c)) {
             operand = operand * 10 + (c - '0'); // Добавляем цифру к многозначному числу
         } else if (c == ' ') {
-            stack.push(operand); // Добавляем многозначное число в стек
-            operand = 0;
+            if (operand != 0) {
+                stack.push(operand); // Добавляем многозначное число в стек
+                operand = 0; // Сбрасываем временную переменную обратно в ноль
+            }
         } else if (isOperator(c)) {
             if (stack.isEmpty()) {
                 cout << "Error: Invalid expression." << endl;
